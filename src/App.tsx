@@ -40,8 +40,11 @@ function App() {
               <div className="image-placeholder">Placeholder</div>
               <div className="text">
                 <h4>{product.prod_name}</h4>
-                <h4 className='price'>{product.prod_price}zł</h4>
-                {product.prod_oldprice && <h4 className='old_price'>{product.prod_oldprice}</h4>}
+                <div className='divider' />
+                <div className='prices'>
+                  <h4 className='price'>{product.prod_price}zł</h4>
+                  {product.prod_oldprice && <h4 className='old_price'>{product.prod_oldprice}</h4>}
+                </div>
               </div>
             </div>
           )
