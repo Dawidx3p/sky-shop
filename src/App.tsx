@@ -1,24 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 
+import { Product, Filter } from './types';
+
 function App() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [filter, setFiler] = useState<Filter>('')
+
+  const filtredProducts = products.filter(product => product.prod_status.includes(filter))
+
+  useEffect(() => {
+    fetch('data/products.json')
+    .then(response => response.json())
+    .then((data: {[id:number]: Product}) => {
+      const filtredData = Object.values(data).filter(product => typeof(product) === 'object')
+      setProducts(filtredData)
+    })
+  }, [])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <form>
+        <select className='product-select' value={filter} onChange={(e) => setFiler(e.target.value)}>
+          <option value=''>Filtruj</option>
+          <option value="recommended">Polecane</option>
+          <option value="saleout">Wyprzedaż</option>
+          <option value="bestseller">Bestseller</option>
+          <option value="promotion">Promocja</option>
+          <option value="new">Nowy</option>
+        </select>
+      </form>
+      <div className="container">
+        {filtredProducts.map((product, key) => {
+          const prod_status = product.prod_status.length ? product.prod_status.split(','): [];
+          return (
+            <div key={key} className="product">
+              <div className='absolute'>
+                {prod_status.map(status => <div className="status">{status}</div>)}
+              </div>
+              <div className="image-placeholder">Placeholder</div>
+              <div className="text">
+                <h4>{product.prod_name}</h4>
+                <h4 className='price'>{product.prod_price}zł</h4>
+                {product.prod_oldprice && <h4 className='old_price'>{product.prod_oldprice}</h4>}
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   );
 }
