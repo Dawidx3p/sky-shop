@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 
-import { Product, Filter } from './types';
+import { Product } from './types';
 
 function App() {
   const [products, setProducts] = useState<Product[]>([])
-  const [filter, setFiler] = useState<Filter>('')
+  const [filter, setFiler] = useState('');
+  const [message, setMessage] = useState('');
 
   const filtredProducts = products.filter(product => product.prod_status.includes(filter))
 
@@ -13,9 +14,11 @@ function App() {
     fetch('data/products.json')
     .then(response => response.json())
     .then((data: {[id:number]: Product}) => {
-      const filtredData = Object.values(data).filter(product => typeof(product) === 'object')
-      setProducts(filtredData)
+      const filtredData = Object.values(data).filter(product => typeof(product) === 'object');
+      setProducts(filtredData);
+      setMessage("");
     })
+    .catch(err => setMessage("couldn't fetch products"))
   }, [])
   return (
     <div className="App">
@@ -50,6 +53,7 @@ function App() {
           )
         })}
       </div>
+      {message}
     </div>
   );
 }

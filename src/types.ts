@@ -74,6 +74,4 @@ interface Product {
     prod_weight: string;
 }
 
-type Filter = string;
-
-export type { Product, Filter }
+export type { Product }
